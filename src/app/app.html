@@ -1,51 +1,36 @@
 <div class="container">
-  <h1>Cadastro de Tarefas</h1>
+  <h1>CRUD de Tarefas</h1>
 
-  <form [formGroup]="form" (ngSubmit)="salvar()" class="card">
+ <form [formGroup]="form" (ngSubmit)="salvar()" class="card form-card">
 
+  <div class="campo">
+    <label for="title">Título da tarefa</label>
     <input
+      id="title"
       type="text"
-      placeholder="Título"
-      formControlName="titulo"
+      placeholder="Ex.: Estudar Angular Signals"
+      formControlName="title"
     />
+  </div>
 
+  <div class="campo">
+    <label for="body">Descrição</label>
     <textarea
-      rows="4"
-      placeholder="Descrição"
-      formControlName="descricao"
+      id="body"
+      rows="5"
+      placeholder="Descreva a tarefa..."
+      formControlName="body"
     ></textarea>
+  </div>
 
-    <select formControlName="prioridade">
-      <option value="alta">Alta</option>
-      <option value="media">Média</option>
-      <option value="baixa">Baixa</option>
-    </select>
+  <button type="submit" class="btn-salvar">
+    Salvar tarefa
+  </button>
 
-    <input
-      type="text"
-      placeholder="Categoria"
-      formControlName="categoria"
-    />
-
-    <select formControlName="status">
-      <option value="pendente">Pendente</option>
-      <option value="em andamento">Em andamento</option>
-      <option value="concluida">Concluída</option>
-    </select>
-
-    <input
-      type="date"
-      formControlName="dataLimite"
-    />
-
-    <button type="submit">
-      Salvar
-    </button>
-
-  </form>
+</form>
 
   @if (loading()) {
-    <p class="loading">Salvando...</p>
+    <p class="loading">Carregando...</p>
   }
 
   @if (sucesso()) {
@@ -56,13 +41,26 @@
     <p class="erro">{{ erro() }}</p>
   }
 
-  @if (tarefaCriada(); as tarefa) {
-    <div class="resultado">
-      <h2>Resposta da API</h2>
+  <div class="lista">
+    @for (tarefa of tarefas(); track tarefa.id) {
+      <div class="item">
+        <h3>{{ tarefa.title }}</h3>
+        <p>{{ tarefa.body }}</p>
 
-      <p><strong>ID:</strong> {{ tarefa.id }}</p>
-      <p><strong>Título:</strong> {{ tarefa.titulo }}</p>
-      <p><strong>Status:</strong> {{ tarefa.status }}</p>
-    </div>
-  }
+        <div class="acoes">
+          <button (click)="editar(tarefa)">
+            Editar
+          </button>
+
+          <button (click)="concluir(tarefa)">
+            Concluir
+          </button>
+
+          <button (click)="excluir(tarefa.id)">
+            Excluir
+          </button>
+        </div>
+      </div>
+    }
+  </div>
 </div>
